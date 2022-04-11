@@ -1,0 +1,54 @@
+Stick
+
+# Auth
+
+- User
+name
+username
+email
+password
+(profile)
+(tickets)
+
+- Profile
+user (User)
+is_admin
+can_open_ticket
+can_close_tickets
+
+- Sector
+name
+phone
+units (Unit)
+
+- Unit
+title
+address
+phone
+sectors (Sector)
+
+# Tickets
+
+- Ticket
+
+is_open
+
+title
+unit (Unit)
+sector (Sector)
+phone (get from Sector/Unit, editable)
+deadline (can be blank)
+urgency (1..5)
+assigned_to (User)
+body
+
+opened_at
+closed_at
+
+messages (Message)
+viewed_by (User)
+
+- Message
+user (User)
+viewed_by (User)
+body
