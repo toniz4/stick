@@ -24,7 +24,7 @@ defmodule StickWeb.UserCreateController do
 
         conn
         |> put_flash(:info, "User created successfully.")
-        |> render("new.html", changeset: %Ecto.Changeset{})
+        |> redirect(to: Routes.user_create_path(conn, :new))
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "new.html", changeset: changeset)
