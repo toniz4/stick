@@ -33,8 +33,17 @@ defmodule Stick.Accounts.User do
   def registration_changeset(user, attrs, opts \\ []) do
     user
     |> cast(attrs, [:email, :password, :name, :username])
+    |> validade_username()
     |> validate_email()
     |> validate_password(opts)
+  end
+
+  defp validade_username(changeset) do
+    changeset
+    |> validate_required([:username])
+    |> validate_length(:username, min: 3, max: 160)
+    |> unsafe_validate_unique(:username, Stick.Repo)
+    |> unique_constraint(:username)
   end
 
   defp validate_email(changeset) do
@@ -49,7 +58,7 @@ defmodule Stick.Accounts.User do
   defp validate_password(changeset, opts) do
     changeset
     |> validate_required([:password])
-    # |> validate_length(:password, min: 12, max: 72)
+    |> validate_length(:password, min: 12, max: 72)
     # |> validate_format(:password, ~r/[a-z]/, message: "at least one lower case character")
     # |> validate_format(:password, ~r/[A-Z]/, message: "at least one upper case character")
     # |> validate_format(:password, ~r/[!?@#$%^&*_0-9]/, message: "at least one digit or punctuation character")
