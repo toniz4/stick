@@ -7,25 +7,31 @@ name
 username
 email
 password
-(profile)
-(tickets)
+profile (belongs to Profile)
+tickets (has many Tickets)
 
 - Profile
-user (User)
+users (has many users)
+title
 is_admin
 can_open_ticket
 can_close_tickets
+handles_tickets_from (sectors)
+
+- Place
+name
+~unit (belongs to Unit)
 
 - Sector
 name
 phone
-units (Unit)
+~units (belongs to Unit)
 
 - Unit
 title
 address
 phone
-sectors (Sector)
+sectors (has many Sectors)
 
 # Tickets
 
@@ -34,13 +40,13 @@ sectors (Sector)
 is_open
 
 title
+body
 unit (Unit)
 sector (Sector)
 phone (get from Sector/Unit, editable)
 deadline (can be blank)
 urgency (1..5)
 assigned_to (User)
-body
 
 opened_at
 closed_at

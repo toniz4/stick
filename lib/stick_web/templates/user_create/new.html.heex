@@ -1,7 +1,7 @@
 <h1>Create User</h1>
 
-<.form let={f} for={@changeset} action={Routes.user_create_path(@conn, :create)}>
-  <%= if @changeset.action do %>
+<.form let={f} for={@user_changeset} action={Routes.user_create_path(@conn, :create)}>
+  <%= if @user_changeset.action do %>
     <div class="alert alert-danger">
       <p>Oops, something went wrong! Please check the errors below.</p>
     </div>
@@ -22,6 +22,10 @@
   <%= label f, :password %>
   <%= password_input f, :password, required: true %>
   <%= error_tag f, :password %>
+
+  <%= inputs_for f, :profile, fn fp -> %>
+    <%= select fp, :title, @profile_titles, required: true %>
+  <% end %>
 
   <div>
     <%= submit "Register" %>

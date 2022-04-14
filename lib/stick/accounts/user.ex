@@ -1,6 +1,7 @@
 defmodule Stick.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
+  alias Stick.Profiles.Profile
 
   schema "users" do
     field :email, :string
@@ -9,6 +10,7 @@ defmodule Stick.Accounts.User do
     field :password, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
     field :confirmed_at, :naive_datetime
+    belongs_to :profile, Profile
 
     timestamps()
   end
@@ -31,8 +33,16 @@ defmodule Stick.Accounts.User do
       Defaults to `true`.
   """
   def registration_changeset(user, attrs, opts \\ []) do
+    profile = case attrs do
+      %{:profile => profile} -> 
+        profile
+      %{"profile" => profile} -> 
+        profile
+    end
     user
     |> cast(attrs, [:email, :password, :name, :username])
+    |> assoc_constraint(:profile)
+    |> put_assoc(:profile, profile)
     |> validade_username()
     |> validate_email()
     |> validate_password(opts)
@@ -42,7 +52,7 @@ defmodule Stick.Accounts.User do
     changeset
     |> validate_required([:username])
     |> validate_length(:username, min: 3, max: 160)
-    |> unsafe_validate_unique(:username, Stick.Repo)
+    |> unique_constraint(:username)
     |> unique_constraint(:username)
   end
 

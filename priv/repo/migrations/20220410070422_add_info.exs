@@ -2,7 +2,6 @@ defmodule Stick.Repo.Migrations.AddInfo do
   use Ecto.Migration
 
   def change do
-
     alter table(:users) do
       add :username, :string, null: false
       add :name, :string, null: false

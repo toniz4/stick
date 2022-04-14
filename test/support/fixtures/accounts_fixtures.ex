@@ -14,7 +14,7 @@ defmodule Stick.AccountsFixtures do
       email: unique_user_email(),
       password: valid_user_password(),
       name: unique_user_name(),
-      username: unique_user_username(),
+      username: unique_user_username()
     })
   end
 

@@ -60,6 +60,12 @@ defmodule Stick.Accounts do
     if User.valid_password?(user, password), do: user
   end
 
+  def get_user_by_username_and_password(username, password)
+      when is_binary(username) and is_binary(password) do
+    user = Repo.get_by(User, username: username)
+    if User.valid_password?(user, password), do: user
+  end
+
   @doc """
   Gets a user by username and password.
 
@@ -108,9 +114,9 @@ defmodule Stick.Accounts do
       {:error, %Ecto.Changeset{}}
 
   """
-  def register_user(attrs) do
+  def register_user(user) do
     %User{}
-    |> User.registration_changeset(attrs)
+    |> User.registration_changeset(user)
     |> Repo.insert()
   end
 
@@ -123,7 +129,7 @@ defmodule Stick.Accounts do
       %Ecto.Changeset{data: %User{}}
 
   """
-  def change_user_registration(%User{} = user, attrs \\ %{}) do
+  def change_user_registration(%User{} = user, attrs \\ %{profile: %{}}) do
     User.registration_changeset(user, attrs, hash_password: false)
   end
 
