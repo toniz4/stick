@@ -45,7 +45,10 @@ defmodule Stick.ProfilesTest do
 
     test "update_profile/2 with invalid data returns error changeset" do
       profile = profile_fixture()
-      assert {:error, %Ecto.Changeset{}} = Profiles.update_profile(profile, @invalid_attrs)
+
+      assert {:error, %Ecto.Changeset{}} =
+               Profiles.update_profile(profile, @invalid_attrs)
+
       assert profile == Profiles.get_profile!(profile.id)
     end
 

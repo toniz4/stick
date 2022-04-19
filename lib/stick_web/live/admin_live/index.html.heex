@@ -1,0 +1,4 @@
+<h1>Admin</h1>
+
+<li><%= live_patch "List Users", to: Routes.user_index_path(@socket, :index) %></li>
+<li><%= live_patch "List Roles", to: Routes.role_index_path(@socket, :index) %></li>

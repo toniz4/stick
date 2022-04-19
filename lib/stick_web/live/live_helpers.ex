@@ -12,14 +12,14 @@ defmodule StickWeb.LiveHelpers do
 
   ## Examples
 
-      <.modal return_to={Routes.profile_index_path(@socket, :index)}>
+      <.modal return_to={Routes.role_index_path(@socket, :index)}>
         <.live_component
-          module={StickWeb.ProfileLive.FormComponent}
-          id={@profile.id || :new}
+          module={StickWeb.RoleLive.FormComponent}
+          id={@role.id || :new}
           title={@page_title}
           action={@live_action}
-          return_to={Routes.profile_index_path(@socket, :index)}
-          profile: @profile
+          return_to={Routes.role_index_path(@socket, :index)}
+          role: @role
         />
       </.modal>
   """

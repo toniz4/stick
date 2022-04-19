@@ -1,7 +1,7 @@
 defmodule Stick.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
-  alias Stick.Profiles.Profile
+  alias Stick.Roles.Role
 
   schema "users" do
     field :email, :string
@@ -10,7 +10,7 @@ defmodule Stick.Accounts.User do
     field :password, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
     field :confirmed_at, :naive_datetime
-    belongs_to :profile, Profile
+    belongs_to :role, Role, on_replace: :nilify
 
     timestamps()
   end
@@ -33,33 +33,47 @@ defmodule Stick.Accounts.User do
       Defaults to `true`.
   """
   def registration_changeset(user, attrs, opts \\ []) do
-    profile = case attrs do
-      %{:profile => profile} -> 
-        profile
-      %{"profile" => profile} -> 
-        profile
-    end
+    role =
+      case attrs do
+        %{:role => role} ->
+          role
+
+        %{"role" => role} ->
+          role
+
+        _ ->
+          %{}
+      end
+
     user
     |> cast(attrs, [:email, :password, :name, :username])
-    |> assoc_constraint(:profile)
-    |> put_assoc(:profile, profile)
-    |> validade_username()
+    |> assoc_constraint(:role)
+    |> put_assoc(:role, role)
+    |> validate_username()
+    |> validate_name()
     |> validate_email()
     |> validate_password(opts)
   end
 
-  defp validade_username(changeset) do
+  defp validate_name(changeset) do
+    changeset
+    |> validate_required([:name])
+    |> validate_length(:name, min: 3, max: 160)
+  end
+
+  defp validate_username(changeset) do
     changeset
     |> validate_required([:username])
     |> validate_length(:username, min: 3, max: 160)
-    |> unique_constraint(:username)
     |> unique_constraint(:username)
   end
 
   defp validate_email(changeset) do
     changeset
     |> validate_required([:email])
-    |> validate_format(:email, ~r/^[^\s]+@[^\s]+$/, message: "must have the @ sign and no spaces")
+    |> validate_format(:email, ~r/^[^\s]+@[^\s]+$/,
+      message: "must have the @ sign and no spaces"
+    )
     |> validate_length(:email, max: 160)
     |> unsafe_validate_unique(:email, Stick.Repo)
     |> unique_constraint(:email)

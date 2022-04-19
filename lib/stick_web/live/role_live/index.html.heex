@@ -1,0 +1,46 @@
+<h1>Listing Roles</h1>
+
+<%= if @live_action in [:new, :edit] do %>
+  <.modal return_to={Routes.role_index_path(@socket, :index)}>
+    <.live_component
+      module={StickWeb.RoleLive.FormComponent}
+      id={@role.id || :new}
+      title={@page_title}
+      action={@live_action}
+      role={@role}
+      return_to={Routes.role_index_path(@socket, :index)}
+    />
+  </.modal>
+<% end %>
+
+<table>
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Is admin</th>
+      <th>Can open ticket</th>
+      <th>Can close tickets</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="roles">
+    <%= for role <- @roles do %>
+      <tr id={"role-#{role.id}"}>
+        <td><%= role.title %></td>
+        <td><%= role.is_admin %></td>
+        <td><%= role.can_open_tickets %></td>
+        <td><%= role.can_close_tickets %></td>
+
+        <td>
+          <span><%= live_redirect "Show", to: Routes.role_show_path(@socket, :show, role) %></span>
+          <span><%= live_patch "Edit", to: Routes.role_index_path(@socket, :edit, role) %></span>
+          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: role.id, data: [confirm: "Are you sure?"] %></span>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<span><%= live_redirect "Back", to: Routes.admin_index_path(@socket, :index) %></span> |
+<span><%= live_patch "New Role", to: Routes.role_index_path(@socket, :new) %></span>

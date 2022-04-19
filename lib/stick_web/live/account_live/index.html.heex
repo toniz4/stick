@@ -1,0 +1,44 @@
+<h1>Listing Accounts</h1>
+
+<%= if @live_action in [:new, :edit] do %>
+  <.modal return_to={Routes.user_index_path(@socket, :index)}>
+    <.live_component
+      module={StickWeb.UserLive.FormComponent}
+      id={@user.id || :new}
+      title={@page_title}
+      action={@live_action}
+      user={@user}
+      return_to={Routes.user_index_path(@socket, :index)}
+    />
+  </.modal>
+<% end %>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Username</th>
+      <th>Role</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="users">
+    <%= for user <- @users do %>
+      <tr id={"user-#{user.id}"}>
+        <td><%= user.name %></td>
+        <td><%= user.email %></td>
+        <td><%= user.username %></td>
+        <td><%= user.role.title %></td>
+        <td>
+          <span><%= live_redirect "Show", to: Routes.user_show_path(@socket, :show, user) %></span>
+          <span><%= live_patch "Edit", to: Routes.user_index_path(@socket, :edit, user) %></span>
+          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: user.id, data: [confirm: "Are you sure?"] %></span>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<span><%= live_redirect "Back", to: Routes.admin_index_path(@socket, :index) %></span> |
+<span><%= live_patch "New User", to: Routes.user_index_path(@socket, :new) %></span>

@@ -1,7 +1,8 @@
-defmodule StickWeb.ProfileLive.Show do
+defmodule StickWeb.UserLive.Show do
   use StickWeb, :live_view
 
-  alias Stick.Profiles
+  alias Stick.Accounts
+  alias Stick.Repo
 
   @impl true
   def mount(_params, _session, socket) do
@@ -13,9 +14,9 @@ defmodule StickWeb.ProfileLive.Show do
     {:noreply,
      socket
      |> assign(:page_title, page_title(socket.assigns.live_action))
-     |> assign(:profile, Profiles.get_profile!(id))}
+     |> assign(:user, Accounts.get_user!(id) |> Repo.preload(:role))}
   end
 
-  defp page_title(:show), do: "Show Profile"
-  defp page_title(:edit), do: "Edit Profile"
+  defp page_title(:show), do: "Show User"
+  defp page_title(:edit), do: "Edit User"
 end

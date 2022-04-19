@@ -95,13 +95,22 @@ defmodule StickWeb.UserSettingsControllerTest do
 
       token =
         extract_user_token(fn url ->
-          Accounts.deliver_update_email_instructions(%{user | email: email}, user.email, url)
+          Accounts.deliver_update_email_instructions(
+            %{user | email: email},
+            user.email,
+            url
+          )
         end)
 
       %{token: token, email: email}
     end
 
-    test "updates the user email once", %{conn: conn, user: user, token: token, email: email} do
+    test "updates the user email once", %{
+      conn: conn,
+      user: user,
+      token: token,
+      email: email
+    } do
       conn = get(conn, Routes.user_settings_path(conn, :confirm_email, token))
       assert redirected_to(conn) == Routes.user_settings_path(conn, :edit)
       assert get_flash(conn, :info) =~ "Email changed successfully"

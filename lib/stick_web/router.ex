@@ -17,11 +17,11 @@ defmodule StickWeb.Router do
     plug :accepts, ["json"]
   end
 
-  scope "/", StickWeb do
-    pipe_through :browser
+  # scope "/", StickWeb do
+  #   pipe_through :browser
 
-    get "/", PageController, :index
-  end
+  #   # get "/", PageController, :index
+  # end
 
   # Other scopes may use custom stacks.
   # scope "/api", StickWeb do
@@ -70,18 +70,11 @@ defmodule StickWeb.Router do
   scope "/", StickWeb do
     pipe_through [:browser, :require_authenticated_user]
 
-    live "/profiles", ProfileLive.Index, :index
-    live "/profiles/new", ProfileLive.Index, :new
-    live "/profiles/:id/edit", ProfileLive.Index, :edit
-
-    live "/profiles/:id", ProfileLive.Show, :show
-    live "/profiles/:id/show/edit", ProfileLive.Show, :edit
-
     get "/users/settings", UserSettingsController, :edit
     put "/users/settings", UserSettingsController, :update
     get "/users/settings/confirm_email/:token", UserSettingsController, :confirm_email
-    get "/users/create", UserCreateController, :new
-    post "/users/create", UserCreateController, :create
+    # get "/users/create", UserCreateController, :new
+    # post "/users/create", UserCreateController, :create
   end
 
   scope "/", StickWeb do
@@ -92,5 +85,35 @@ defmodule StickWeb.Router do
     post "/users/confirm", UserConfirmationController, :create
     get "/users/confirm/:token", UserConfirmationController, :edit
     post "/users/confirm/:token", UserConfirmationController, :update
+  end
+
+  live_session :default, on_mount: StickWeb.AuthLive do
+    scope "/", StickWeb do
+      pipe_through [:browser, :require_authenticated_user]
+
+      live "/", IndexLive.Index, :index
+    end
+  end
+
+  live_session :admin, on_mount: StickWeb.AuthLive.Admin do
+    scope "/admin", StickWeb do
+      pipe_through [:browser, :require_authenticated_user]
+
+      live "/", AdminLive.Index, :index
+
+      live "/users", UserLive.Index, :index
+      live "/users/new", UserLive.Index, :new
+      live "/users/:id/edit", UserLive.Index, :edit
+
+      live "/users/:id", UserLive.Show, :show
+      live "/users/:id/show/edit", UserLive.Show, :edit
+
+      live "/roles", RoleLive.Index, :index
+      live "/roles/new", RoleLive.Index, :new
+      live "/roles/:id/edit", RoleLive.Index, :edit
+
+      live "/roles/:id", RoleLive.Show, :show
+      live "/roles/:id/show/edit", RoleLive.Show, :edit
+    end
   end
 end

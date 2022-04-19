@@ -19,7 +19,10 @@ defmodule Stick.AccountsTest do
 
   describe "get_user_by_email_and_password/2" do
     test "does not return the user if the email does not exist" do
-      refute Accounts.get_user_by_email_and_password("unknown@example.com", "hello world!")
+      refute Accounts.get_user_by_email_and_password(
+               "unknown@example.com",
+               "hello world!"
+             )
     end
 
     test "does not return the user if the password is not valid" do
@@ -59,7 +62,8 @@ defmodule Stick.AccountsTest do
     end
 
     test "validates email and password when given" do
-      {:error, changeset} = Accounts.register_user(%{email: "not valid", password: "not valid"})
+      {:error, changeset} =
+        Accounts.register_user(%{email: "not valid", password: "not valid"})
 
       assert %{
                email: ["must have the @ sign and no spaces"],
@@ -168,7 +172,10 @@ defmodule Stick.AccountsTest do
 
     test "applies the email without persisting it", %{user: user} do
       email = unique_user_email()
-      {:ok, user} = Accounts.apply_user_email(user, valid_user_password(), %{email: email})
+
+      {:ok, user} =
+        Accounts.apply_user_email(user, valid_user_password(), %{email: email})
+
       assert user.email == email
       assert Accounts.get_user!(user.id).email != email
     end
@@ -200,7 +207,11 @@ defmodule Stick.AccountsTest do
 
       token =
         extract_user_token(fn url ->
-          Accounts.deliver_update_email_instructions(%{user | email: email}, user.email, url)
+          Accounts.deliver_update_email_instructions(
+            %{user | email: email},
+            user.email,
+            url
+          )
         end)
 
       %{user: user, token: token, email: email}
@@ -223,7 +234,9 @@ defmodule Stick.AccountsTest do
     end
 
     test "does not update email if user email changed", %{user: user, token: token} do
-      assert Accounts.update_user_email(%{user | email: "current@example.com"}, token) == :error
+      assert Accounts.update_user_email(%{user | email: "current@example.com"}, token) ==
+               :error
+
       assert Repo.get!(User, user.id).email == user.email
       assert Repo.get_by(UserToken, user_id: user.id)
     end
@@ -488,7 +501,9 @@ defmodule Stick.AccountsTest do
     end
 
     test "updates the password", %{user: user} do
-      {:ok, updated_user} = Accounts.reset_user_password(user, %{password: "new valid password"})
+      {:ok, updated_user} =
+        Accounts.reset_user_password(user, %{password: "new valid password"})
+
       assert is_nil(updated_user.password)
       assert Accounts.get_user_by_email_and_password(user.email, "new valid password")
     end

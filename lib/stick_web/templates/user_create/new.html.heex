@@ -23,8 +23,10 @@
   <%= password_input f, :password, required: true %>
   <%= error_tag f, :password %>
 
-  <%= inputs_for f, :profile, fn fp -> %>
-    <%= select fp, :title, @profile_titles, required: true %>
+  <%= inputs_for f, :role, fn fp -> %>
+    <%= label f, :role %>
+    <%= select fp, :title, @role_titles, required: true %>
+    <%= error_tag f, :role %>
   <% end %>
 
   <div>

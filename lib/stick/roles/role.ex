@@ -1,11 +1,11 @@
-defmodule Stick.Profiles.Profile do
+defmodule Stick.Roles.Role do
   use Ecto.Schema
   import Ecto.Changeset
   alias Stick.Accounts.User
 
   @fields [:is_admin, :can_open_tickets, :can_close_tickets, :title]
 
-  schema "profiles" do
+  schema "roles" do
     field :title, :string
     field :can_close_tickets, :boolean, default: false
     field :can_open_tickets, :boolean, default: false
@@ -16,10 +16,11 @@ defmodule Stick.Profiles.Profile do
   end
 
   @doc false
-  def changeset(profile, attrs) do
-    profile
+  def changeset(role, attrs) do
+    role
     |> cast(attrs, @fields)
     |> cast_assoc(:users)
+    |> validate_length(:title, min: 3, max: 160)
     |> validate_required(@fields)
   end
 end

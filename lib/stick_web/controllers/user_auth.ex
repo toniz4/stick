@@ -4,6 +4,7 @@ defmodule StickWeb.UserAuth do
 
   alias Stick.Accounts
   alias StickWeb.Router.Helpers, as: Routes
+  alias Stick.Repo
 
   # Make the remember me cookie valid for 60 days.
   # If you want bump or reduce this value, also change
@@ -90,7 +91,12 @@ defmodule StickWeb.UserAuth do
   """
   def fetch_current_user(conn, _opts) do
     {user_token, conn} = ensure_user_token(conn)
-    user = user_token && Accounts.get_user_by_session_token(user_token)
+
+    user =
+      user_token &&
+        Accounts.get_user_by_session_token(user_token)
+        |> Repo.preload(:role)
+
     assign(conn, :current_user, user)
   end
 

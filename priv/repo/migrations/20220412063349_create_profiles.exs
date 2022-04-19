@@ -2,7 +2,7 @@ defmodule Stick.Repo.Migrations.CreateProfiles do
   use Ecto.Migration
 
   def change do
-    create table(:profiles) do
+    create table(:roles) do
       add :title, :string, null: false
       add :is_admin, :boolean, default: false, null: false
       add :can_open_tickets, :boolean, default: false, null: false
@@ -11,12 +11,12 @@ defmodule Stick.Repo.Migrations.CreateProfiles do
       timestamps()
     end
 
-    create unique_index(:profiles, [:title])
+    create unique_index(:roles, [:title])
 
     alter table(:users) do
-      add :profile_id, references(:profiles, on_delete: :nothing)
+      add :role_id, references(:roles, on_delete: :nothing)
     end
 
-    create index(:users, [:profile_id])
+    create index(:users, [:role_id])
   end
 end
