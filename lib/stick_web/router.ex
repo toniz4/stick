@@ -114,6 +114,20 @@ defmodule StickWeb.Router do
 
       live "/roles/:id", RoleLive.Show, :show
       live "/roles/:id/show/edit", RoleLive.Show, :edit
+
+      live "/units", UnitLive.Index, :index
+      live "/units/new", UnitLive.Index, :new
+      live "/units/:id/edit", UnitLive.Index, :edit
+
+      live "/units/:id", UnitLive.Show, :show
+      live "/units/:id/show/edit", UnitLive.Show, :edit
+
+      live "/departments", DepartmentLive.Index, :index
+      live "/departments/new", DepartmentLive.Index, :new
+      live "/departments/:id/edit", DepartmentLive.Index, :edit
+
+      live "/departments/:id", DepartmentLive.Show, :show
+      live "/departments/:id/show/edit", DepartmentLive.Show, :edit
     end
   end
 end

@@ -33,27 +33,24 @@ defmodule Stick.Accounts.User do
       Defaults to `true`.
   """
   def registration_changeset(user, attrs, opts \\ []) do
-    role =
-      case attrs do
-        %{:role => role} ->
-          role
-
-        %{"role" => role} ->
-          role
-
-        _ ->
-          %{}
-      end
-
     user
     |> cast(attrs, [:email, :password, :name, :username])
     |> assoc_constraint(:role)
-    |> put_assoc(:role, role)
+    |> put_assoc(:role, get_role_assoc(user, attrs))
     |> validate_username()
     |> validate_name()
     |> validate_email()
+    |> IO.inspect()
     |> validate_password(opts)
   end
+
+  defp get_role_assoc(_user, %{:role => role} = _attrs), do: role
+
+  defp get_role_assoc(_user, %{"role" => role} = _attrs), do: role
+
+  defp get_role_assoc(%__MODULE__{role: role = %Role{}} = _user, _attrs), do: role
+
+  defp get_role_assoc(_user, _attrs), do: %{}
 
   defp validate_name(changeset) do
     changeset

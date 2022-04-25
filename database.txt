@@ -22,16 +22,17 @@ handles_tickets_from (sectors)
 name
 ~unit (belongs to Unit)
 
-- Sector
-name
-phone
-~units (belongs to Unit)
+- Department
+title
+extension
+~unit (belongs to Unit)
 
 - Unit
 title
 address
 phone
 sectors (has many Sectors)
+places (has many Places)
 
 # Tickets
 

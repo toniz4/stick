@@ -27,7 +27,7 @@
 
     <%= inputs_for f, :role, fn fp -> %>
       <%= label f, :role %>
-      <%= select fp, :title, @role_titles, required: true %>
+      <%= select fp, :title, Enum.map(@roles, &(&1.title)), required: true %>
       <%= error_tag f, :role %>
     <% end %>
   

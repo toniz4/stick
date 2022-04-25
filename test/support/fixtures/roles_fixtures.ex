@@ -1,22 +1,22 @@
-defmodule Stick.ProfilesFixtures do
+defmodule Stick.RolesFixtures do
   @moduledoc """
   This module defines test helpers for creating
-  entities via the `Stick.Profiles` context.
+  entities via the `Stick.Roles` context.
   """
 
   @doc """
-  Generate a profile.
+  Generate a role.
   """
-  def profile_fixture(attrs \\ %{}) do
-    {:ok, profile} =
+  def role_fixture(attrs \\ %{}) do
+    {:ok, role} =
       attrs
       |> Enum.into(%{
         can_close_tickets: true,
         can_open_ticket: true,
         is_admin: true
       })
-      |> Stick.Profiles.create_profile()
+      |> Stick.Roles.create_role()
 
-    profile
+    role
   end
 end

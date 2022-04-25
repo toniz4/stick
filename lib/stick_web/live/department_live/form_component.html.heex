@@ -1,0 +1,30 @@
+<div>
+  <h2><%= @title %></h2>
+
+  <.form
+    let={f}
+    for={@changeset}
+    id="department-form"
+    phx-target={@myself}
+    phx-change="validate"
+    phx-submit="save">
+  
+    <%= label f, :title %>
+    <%= text_input f, :title %>
+    <%= error_tag f, :title %>
+  
+    <%= label f, :extension %>
+    <%= text_input f, :extension %>
+    <%= error_tag f, :extension %>
+
+    <%= inputs_for f, :unit, fn fp  -> %>
+      <%= select fp, :title, Enum.map(@units, &(&1.title)), required: true %>
+      <%= error_tag fp, :unit %>
+      <%= input_value(fp, :id) %>
+    <% end %>
+
+    <div>
+    <%= submit "Save", phx_disable_with: "Saving..." %>
+    </div>
+  </.form>
+</div>

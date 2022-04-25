@@ -12,16 +12,15 @@ defmodule StickWeb.UserLive.FormComponent do
 
     changeset =
       user
-      |> Repo.preload(:role)
       |> Accounts.change_user_registration()
 
-    roles = Repo.all(from r in Role, select: r.title)
+    roles = Roles.list_roles()
 
     {:ok,
      socket
      |> assign(assigns)
      |> assign(:changeset, changeset)
-     |> assign(:role_titles, roles)}
+     |> assign(:roles, roles)}
   end
 
   @impl true
@@ -33,7 +32,6 @@ defmodule StickWeb.UserLive.FormComponent do
 
     changeset =
       socket.assigns.user
-      |> Repo.preload(:role)
       |> Accounts.change_user_registration(params)
       |> Map.put(:action, :validate)
 
@@ -51,7 +49,6 @@ defmodule StickWeb.UserLive.FormComponent do
 
     user =
       socket.assigns.user
-      |> Repo.preload(:role)
 
     case Accounts.update_user_registration(user, params) do
       {:ok, _role} ->

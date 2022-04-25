@@ -18,7 +18,7 @@ defmodule StickWeb.UserLive.Index do
   defp apply_action(socket, :edit, %{"id" => id}) do
     socket
     |> assign(:page_title, "Edit user")
-    |> assign(:user, Accounts.get_user!(id))
+    |> assign(:user, Accounts.get_user!(id) |> Repo.preload(:role))
   end
 
   defp apply_action(socket, :new, _params) do

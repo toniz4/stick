@@ -19,7 +19,6 @@ defmodule Stick.Roles.Role do
   def changeset(role, attrs) do
     role
     |> cast(attrs, @fields)
-    |> cast_assoc(:users)
     |> validate_length(:title, min: 3, max: 160)
     |> validate_required(@fields)
   end

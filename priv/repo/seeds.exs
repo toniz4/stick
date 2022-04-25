@@ -9,7 +9,17 @@
 #
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
-alias Stick.{Accounts, Repo, Accounts.User, Roles, Roles.Role}
+alias Stick.{
+  Accounts,
+  Repo,
+  Accounts.User,
+  Roles,
+  Roles.Role,
+  Units,
+  Units.Department,
+  Units.Unit
+}
+
 import Ecto.Changeset
 import Ecto
 import Ecto.Query
@@ -53,10 +63,37 @@ normal = %{
   email: "normal@stick.com"
 }
 
-user =
-  Accounts.register_user(admin)
-  |> IO.inspect()
+unit1 = %{
+  title: "Main",
+  phone: "+88 88888-8888",
+  address: "88 Street, Some City"
+}
 
-user =
-  Accounts.register_user(normal)
-  |> IO.inspect()
+unit2 = %{
+  title: "Second",
+  phone: "+44 44444-44444",
+  address: "44 Street, Some City"
+}
+
+Units.create_unit(unit1)
+Units.create_unit(unit2)
+
+department1 = %{
+  title: "IT",
+  extension: "5555",
+  unit: Repo.one!(from u in Unit, where: u.title == "Main")
+}
+
+department2 = %{
+  title: "HR",
+  extension: "4444",
+  unit: Repo.one!(from u in Unit, where: u.title == "Main")
+}
+
+Units.create_department(department1)
+
+Units.create_department(department2)
+
+Accounts.register_user(admin)
+
+Accounts.register_user(normal)
