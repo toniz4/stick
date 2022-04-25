@@ -32,8 +32,15 @@ defmodule StickWeb.UserLive.FormComponent do
 
     changeset =
       socket.assigns.user
-      |> Accounts.change_user_registration(params)
+      # |> Accounts.change_user_registration(params)
+      |> Accounts.User.registration_changeset(params, hash_password: false)
       |> Map.put(:action, :validate)
+      |> IO.inspect()
+
+      socket.assigns.user.hashed_password
+      |> IO.inspect()
+
+    # Accounts.User.edit_user_changeset(socket.assigns.user, params) |> IO.inspect()
 
     {:noreply, assign(socket, :changeset, changeset)}
   end
@@ -47,8 +54,7 @@ defmodule StickWeb.UserLive.FormComponent do
       user_params
       |> Map.put("role", Roles.get_role_by_title(user_params["role"]["title"]))
 
-    user =
-      socket.assigns.user
+    user = socket.assigns.user
 
     case Accounts.update_user_registration(user, params) do
       {:ok, _role} ->

@@ -46,8 +46,7 @@ defmodule Stick.RolesTest do
     test "update_role/2 with invalid data returns error changeset" do
       role = role_fixture()
 
-      assert {:error, %Ecto.Changeset{}} =
-               Roles.update_role(role, @invalid_attrs)
+      assert {:error, %Ecto.Changeset{}} = Roles.update_role(role, @invalid_attrs)
 
       assert role == Roles.get_role!(role.id)
     end

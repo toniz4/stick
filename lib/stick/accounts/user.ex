@@ -40,8 +40,8 @@ defmodule Stick.Accounts.User do
     |> validate_username()
     |> validate_name()
     |> validate_email()
-    |> IO.inspect()
     |> validate_password(opts)
+
   end
 
   defp get_role_assoc(_user, %{:role => role} = _attrs), do: role
@@ -77,13 +77,19 @@ defmodule Stick.Accounts.User do
   end
 
   defp validate_password(changeset, opts) do
-    changeset
-    |> validate_required([:password])
-    |> validate_length(:password, min: 12, max: 72)
-    # |> validate_format(:password, ~r/[a-z]/, message: "at least one lower case character")
-    # |> validate_format(:password, ~r/[A-Z]/, message: "at least one upper case character")
-    # |> validate_format(:password, ~r/[!?@#$%^&*_0-9]/, message: "at least one digit or punctuation character")
-    |> maybe_hash_password(opts)
+    keep_password? = Keyword.get(opts, :keep_password, false)
+
+    if keep_password? do
+      changeset
+    else
+      changeset
+      |> validate_required([:password])
+      |> validate_length(:password, min: 12, max: 72)
+      # |> validate_format(:password, ~r/[a-z]/, message: "at least one lower case character")
+      # |> validate_format(:password, ~r/[A-Z]/, message: "at least one upper case character")
+      # |> validate_format(:password, ~r/[!?@#$%^&*_0-9]/, message: "at least one digit or punctuation character")
+      |> maybe_hash_password(opts)
+    end
   end
 
   defp maybe_hash_password(changeset, opts) do
