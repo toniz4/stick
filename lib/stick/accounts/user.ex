@@ -41,7 +41,6 @@ defmodule Stick.Accounts.User do
     |> validate_name()
     |> validate_email()
     |> validate_password(opts)
-
   end
 
   defp get_role_assoc(_user, %{:role => role} = _attrs), do: role
@@ -77,9 +76,17 @@ defmodule Stick.Accounts.User do
   end
 
   defp validate_password(changeset, opts) do
-    keep_password? = Keyword.get(opts, :keep_password, false)
+    have_hashed_password? =
+      changeset
+      |> get_field(:hashed_password)
+      |> is_binary()
 
-    if keep_password? do
+    have_password? =
+      changeset
+      |> get_field(:password)
+      |> is_binary()
+
+    if have_hashed_password? and !have_password? do
       changeset
     else
       changeset
