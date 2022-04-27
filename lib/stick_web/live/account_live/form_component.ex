@@ -51,10 +51,10 @@ defmodule StickWeb.UserLive.FormComponent do
     user = socket.assigns.user
 
     case Accounts.update_user_registration(user, params) do
-      {:ok, _role} ->
+      {:ok, _user} ->
         {:noreply,
          socket
-         |> put_flash(:info, "Role updated successfully")
+         |> put_flash(:info, "Account updated successfully")
          |> push_redirect(to: socket.assigns.return_to)}
 
       {:error, %Ecto.Changeset{} = changeset} ->

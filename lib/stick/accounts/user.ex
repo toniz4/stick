@@ -10,6 +10,7 @@ defmodule Stick.Accounts.User do
     field :password, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
     field :confirmed_at, :naive_datetime
+    field :enabled, :boolean, default: true
     belongs_to :role, Role, on_replace: :nilify
 
     timestamps()
@@ -34,7 +35,7 @@ defmodule Stick.Accounts.User do
   """
   def registration_changeset(user, attrs, opts \\ []) do
     user
-    |> cast(attrs, [:email, :password, :name, :username])
+    |> cast(attrs, [:email, :password, :name, :username, :enabled])
     |> assoc_constraint(:role)
     |> put_assoc(:role, get_role_assoc(user, attrs))
     |> validate_username()

@@ -71,7 +71,8 @@ defmodule StickWeb.UserAuth do
 
   It clears all session data for safety. See renew_session.
   """
-  def log_out_user(conn) do
+  def log_out_user(conn, opts \\ []) do
+    redirect? = Keyword.get(opts, :redirect, true)
     user_token = get_session(conn, :user_token)
     user_token && Accounts.delete_session_token(user_token)
 
@@ -79,10 +80,16 @@ defmodule StickWeb.UserAuth do
       StickWeb.Endpoint.broadcast(live_socket_id, "disconnect", %{})
     end
 
-    conn
-    |> renew_session()
-    |> delete_resp_cookie(@remember_me_cookie)
-    |> redirect(to: "/")
+    if redirect? do
+      conn
+      |> renew_session()
+      |> delete_resp_cookie(@remember_me_cookie)
+      |> redirect(to: "/")
+    else
+      conn
+      |> renew_session()
+      |> delete_resp_cookie(@remember_me_cookie)
+    end
   end
 
   @doc """
@@ -134,14 +141,22 @@ defmodule StickWeb.UserAuth do
   they use the application at all, here would be a good place.
   """
   def require_authenticated_user(conn, _opts) do
-    if conn.assigns[:current_user] do
-      conn
-    else
-      conn
-      |> put_flash(:error, "You must log in to access this page.")
-      |> maybe_store_return_to()
-      |> redirect(to: Routes.user_session_path(conn, :new))
-      |> halt()
+    case conn.assigns[:current_user] do
+      %{enabled: true} -> 
+        conn
+      %{enabled: false} -> 
+        conn
+        |> put_flash(:error, "Your account is disabled")
+        |> log_out_user(redirect: false)
+        |> maybe_store_return_to()
+        |> redirect(to: Routes.user_session_path(conn, :new))
+        |> halt()
+      _ -> 
+        conn
+        |> put_flash(:error, "You must log in to access this page.")
+        |> maybe_store_return_to()
+        |> redirect(to: Routes.user_session_path(conn, :new))
+        |> halt()
     end
   end
 

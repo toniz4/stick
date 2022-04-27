@@ -25,6 +25,10 @@
     <%= password_input f, :password %>
     <%= error_tag f, :password %>
 
+    <%= label f, :enabled %>
+    <%= checkbox f, :enabled %>
+    <%= error_tag f, :enabled %>
+
     <%= inputs_for f, :role, fn fp -> %>
       <%= label f, :role %>
       <%= select fp, :title, Enum.map(@roles, &(&1.title)), required: true %>

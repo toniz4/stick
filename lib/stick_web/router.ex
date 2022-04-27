@@ -80,6 +80,7 @@ defmodule StickWeb.Router do
   scope "/", StickWeb do
     pipe_through [:browser]
 
+    live "/", IndexLive.Index, :index
     delete "/users/log_out", UserSessionController, :delete
     get "/users/confirm", UserConfirmationController, :new
     post "/users/confirm", UserConfirmationController, :create
@@ -91,7 +92,6 @@ defmodule StickWeb.Router do
     scope "/", StickWeb do
       pipe_through [:browser, :require_authenticated_user]
 
-      live "/", IndexLive.Index, :index
     end
   end
 
