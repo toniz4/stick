@@ -3,13 +3,9 @@ defmodule StickWeb.UserLive.FormComponent do
 
   alias Stick.Accounts
   alias Stick.Roles
-  alias Stick.Roles.Role
-  alias Stick.Repo
 
   @impl true
   def update(%{user: user} = assigns, socket) do
-    import Ecto.Query
-
     changeset =
       user
       |> Accounts.change_user_registration()
