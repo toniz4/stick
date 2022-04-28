@@ -142,16 +142,18 @@ defmodule StickWeb.UserAuth do
   """
   def require_authenticated_user(conn, _opts) do
     case conn.assigns[:current_user] do
-      %{enabled: true} -> 
+      %{enabled: true} ->
         conn
-      %{enabled: false} -> 
+
+      %{enabled: false} ->
         conn
         |> put_flash(:error, "Your account is disabled")
         |> log_out_user(redirect: false)
         |> maybe_store_return_to()
         |> redirect(to: Routes.user_session_path(conn, :new))
         |> halt()
-      _ -> 
+
+      _ ->
         conn
         |> put_flash(:error, "You must log in to access this page.")
         |> maybe_store_return_to()

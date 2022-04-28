@@ -44,13 +44,24 @@ defmodule Stick.Accounts.User do
     |> validate_password(opts)
   end
 
-  defp get_role_assoc(_user, %{:role => role} = _attrs), do: role
+  def get_role_assoc(user, attrs) do
+    case attrs do
+      %{:role => role} ->
+        role
 
-  defp get_role_assoc(_user, %{"role" => role} = _attrs), do: role
+      %{"role" => role} ->
+        role
 
-  defp get_role_assoc(%__MODULE__{role: role = %Role{}} = _user, _attrs), do: role
+      _ ->
+        case user do
+          %{role_id: nil} ->
+            %{}
 
-  defp get_role_assoc(_user, _attrs), do: %{}
+          %{role: role} ->
+            role
+        end
+    end
+  end
 
   defp validate_name(changeset) do
     changeset

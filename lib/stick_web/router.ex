@@ -91,7 +91,6 @@ defmodule StickWeb.Router do
   live_session :default, on_mount: StickWeb.AuthLive do
     scope "/", StickWeb do
       pipe_through [:browser, :require_authenticated_user]
-
     end
   end
 
