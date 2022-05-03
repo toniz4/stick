@@ -47,22 +47,6 @@ admin_q = from p in Role, where: p.title == "admin"
 np = Repo.one(normal_q)
 ap = Repo.one(admin_q)
 
-admin = %{
-  name: "admin",
-  username: "admin",
-  password: "admin123456789",
-  role: ap,
-  email: "admin@stick.com"
-}
-
-normal = %{
-  name: "normal",
-  username: "normal",
-  password: "normal123456789",
-  role: np,
-  email: "normal@stick.com"
-}
-
 unit1 = %{
   title: "Main",
   phone: "+88 88888-8888",
@@ -88,6 +72,24 @@ department2 = %{
   title: "HR",
   extension: "4444",
   unit: Repo.one!(from u in Unit, where: u.title == "Main")
+}
+
+admin = %{
+  name: "admin",
+  username: "admin",
+  password: "admin123456789",
+  role: ap,
+  unit: Repo.one!(from u in Unit, where: u.title == "Main"),
+  email: "admin@stick.com"
+}
+
+normal = %{
+  name: "normal",
+  username: "normal",
+  password: "normal123456789",
+  role: np,
+  unit: Repo.one!(from u in Unit, where: u.title == "Main"),
+  email: "normal@stick.com"
 }
 
 Units.create_department(department1)

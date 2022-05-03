@@ -22,7 +22,7 @@
     <%= error_tag f, :email %>
   
     <%= label f, :password %>
-    <%= password_input f, :password %>
+    <%= password_input f, :password, value: Ecto.Changeset.get_field(@changeset, :password) %>
     <%= error_tag f, :password %>
 
     <%= label f, :enabled %>
@@ -33,6 +33,12 @@
       <%= label f, :role %>
       <%= select fp, :title, Enum.map(@roles, &(&1.title)), required: true %>
       <%= error_tag f, :role %>
+    <% end %>
+
+    <%= inputs_for f, :unit, fn fp -> %>
+      <%= label f, :unit %>
+      <%= select fp, :title, Enum.map(@units, &(&1.title)), required: true %>
+      <%= error_tag f, :unit %>
     <% end %>
   
     <div>

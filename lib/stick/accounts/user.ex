@@ -2,6 +2,7 @@ defmodule Stick.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
   alias Stick.Roles.Role
+  alias Stick.Units.Unit
 
   schema "users" do
     field :email, :string
@@ -12,6 +13,7 @@ defmodule Stick.Accounts.User do
     field :confirmed_at, :naive_datetime
     field :enabled, :boolean, default: true
     belongs_to :role, Role, on_replace: :nilify
+    belongs_to :unit, Unit, on_replace: :nilify
 
     timestamps()
   end
@@ -37,14 +39,52 @@ defmodule Stick.Accounts.User do
     user
     |> cast(attrs, [:email, :password, :name, :username, :enabled])
     |> assoc_constraint(:role)
-    |> put_assoc(:role, get_role_assoc(user, attrs))
+    |> get_assoc(:unit, attrs)
+    |> get_assoc(:role, attrs)
     |> validate_username()
     |> validate_name()
     |> validate_email()
     |> validate_password(opts)
   end
 
-  def get_role_assoc(user, attrs) do
+  def get_assoc(changeset, :unit, attrs) do
+    unit =
+      changeset
+      |> get_unit_assoc(attrs)
+
+    changeset
+    |> put_assoc(:unit, unit)
+  end
+
+  def get_assoc(changeset, :role, attrs) do
+    role =
+      changeset
+      |> get_role_assoc(attrs)
+
+    changeset
+    |> put_assoc(:role, role)
+  end
+
+  def get_unit_assoc(changeset, attrs) do
+    case attrs do
+      %{:unit => unit} ->
+        unit
+
+      %{"unit" => unit} ->
+        unit
+
+      _ ->
+        case changeset.data do
+          %{unit_id: nil} ->
+            %{}
+
+          %{unit: unit} ->
+            unit
+        end
+    end
+  end
+
+  def get_role_assoc(changeset, attrs) do
     case attrs do
       %{:role => role} ->
         role
@@ -53,7 +93,7 @@ defmodule Stick.Accounts.User do
         role
 
       _ ->
-        case user do
+        case changeset.data do
           %{role_id: nil} ->
             %{}
 

@@ -3,6 +3,7 @@ defmodule StickWeb.UserLive.FormComponent do
 
   alias Stick.Accounts
   alias Stick.Roles
+  alias Stick.Units
 
   @impl true
   def update(%{user: user} = assigns, socket) do
@@ -11,12 +12,14 @@ defmodule StickWeb.UserLive.FormComponent do
       |> Accounts.change_user_registration()
 
     roles = Roles.list_roles()
+    units = Units.list_units()
 
     {:ok,
      socket
      |> assign(assigns)
      |> assign(:changeset, changeset)
-     |> assign(:roles, roles)}
+     |> assign(:roles, roles)
+     |> assign(:units, units)}
   end
 
   @impl true
@@ -25,10 +28,10 @@ defmodule StickWeb.UserLive.FormComponent do
     params =
       user_params
       |> Map.put("role", Roles.get_role_by_title(user_params["role"]["title"]))
+      |> Map.put("unit", Units.get_unit_by_title(user_params["unit"]["title"]))
 
     changeset =
       socket.assigns.user
-      # |> Accounts.change_user_registration(params)
       |> Accounts.User.registration_changeset(params, hash_password: false)
       |> Map.put(:action, :validate)
 
@@ -43,6 +46,7 @@ defmodule StickWeb.UserLive.FormComponent do
     params =
       user_params
       |> Map.put("role", Roles.get_role_by_title(user_params["role"]["title"]))
+      |> Map.put("unit", Units.get_unit_by_title(user_params["unit"]["title"]))
 
     user = socket.assigns.user
 
@@ -62,6 +66,7 @@ defmodule StickWeb.UserLive.FormComponent do
     params =
       user_params
       |> Map.put("role", Roles.get_role_by_title(user_params["role"]["title"]))
+      |> Map.put("unit", Units.get_unit_by_title(user_params["unit"]["title"]))
 
     case Accounts.register_user(params) do
       {:ok, _role} ->

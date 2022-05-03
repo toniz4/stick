@@ -424,4 +424,9 @@ defmodule Stick.Accounts do
     |> User.registration_changeset(attrs)
     |> Repo.update()
   end
+
+  def preload_user_fields(user) do
+    user
+    |> Repo.preload([:role, :unit])
+  end
 end

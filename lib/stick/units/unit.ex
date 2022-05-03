@@ -3,6 +3,7 @@ defmodule Stick.Units.Unit do
   import Ecto.Changeset
 
   alias Stick.Units.Department
+  alias Stick.Accounts.User
 
   @fiels [:title, :address, :phone]
   schema "units" do
@@ -10,6 +11,7 @@ defmodule Stick.Units.Unit do
     field :phone, :string
     field :title, :string
     has_many :departments, Department
+    has_many :users, User
 
     timestamps()
   end
