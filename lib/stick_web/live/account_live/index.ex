@@ -43,6 +43,6 @@ defmodule StickWeb.UserLive.Index do
 
   defp list_users do
     Accounts.list_users()
-    |> Repo.preload(:role)
+    |> Accounts.preload_user_fields()
   end
 end

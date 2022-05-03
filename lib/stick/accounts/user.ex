@@ -3,6 +3,7 @@ defmodule Stick.Accounts.User do
   import Ecto.Changeset
   alias Stick.Roles.Role
   alias Stick.Units.Unit
+  alias Stick.Units.Department
 
   schema "users" do
     field :email, :string
@@ -14,6 +15,7 @@ defmodule Stick.Accounts.User do
     field :enabled, :boolean, default: true
     belongs_to :role, Role, on_replace: :nilify
     belongs_to :unit, Unit, on_replace: :nilify
+    belongs_to :department, Department, on_replace: :nilify
 
     timestamps()
   end
@@ -41,6 +43,7 @@ defmodule Stick.Accounts.User do
     |> assoc_constraint(:role)
     |> get_assoc(:unit, attrs)
     |> get_assoc(:role, attrs)
+    |> get_assoc(:department, attrs)
     |> validate_username()
     |> validate_name()
     |> validate_email()
@@ -63,6 +66,15 @@ defmodule Stick.Accounts.User do
 
     changeset
     |> put_assoc(:role, role)
+  end
+
+  def get_assoc(changeset, :department, attrs) do
+    department =
+      changeset
+      |> get_department_assoc(attrs)
+
+    changeset
+    |> put_assoc(:department, department)
   end
 
   def get_unit_assoc(changeset, attrs) do
@@ -99,6 +111,25 @@ defmodule Stick.Accounts.User do
 
           %{role: role} ->
             role
+        end
+    end
+  end
+
+  def get_department_assoc(changeset, attrs) do
+    case attrs do
+      %{:department => department} ->
+        department
+
+      %{"department" => department} ->
+        department
+
+      _ ->
+        case changeset.data do
+          %{department_id: nil} ->
+            %{}
+
+          %{department: department} ->
+            department
         end
     end
   end

@@ -74,12 +74,17 @@ department2 = %{
   unit: Repo.one!(from u in Unit, where: u.title == "Main")
 }
 
+Units.create_department(department1)
+
+Units.create_department(department2)
+
 admin = %{
   name: "admin",
   username: "admin",
   password: "admin123456789",
   role: ap,
   unit: Repo.one!(from u in Unit, where: u.title == "Main"),
+  department: Repo.one!(from d in Department, where: d.title == "IT"),
   email: "admin@stick.com"
 }
 
@@ -89,12 +94,9 @@ normal = %{
   password: "normal123456789",
   role: np,
   unit: Repo.one!(from u in Unit, where: u.title == "Main"),
+  department: Repo.one!(from d in Department, where: d.title == "IT"),
   email: "normal@stick.com"
 }
-
-Units.create_department(department1)
-
-Units.create_department(department2)
 
 Accounts.register_user(admin)
 

@@ -150,6 +150,10 @@ defmodule Stick.Units do
   """
   def get_department!(id), do: Repo.get!(Department, id)
 
+  def get_department_by_title(title) do
+    Repo.one(from d in Department, where: d.title == ^title)
+  end
+
   @doc """
   Creates a department.
 

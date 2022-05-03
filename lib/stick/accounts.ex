@@ -427,6 +427,6 @@ defmodule Stick.Accounts do
 
   def preload_user_fields(user) do
     user
-    |> Repo.preload([:role, :unit])
+    |> Repo.preload([:role, :unit, :department])
   end
 end

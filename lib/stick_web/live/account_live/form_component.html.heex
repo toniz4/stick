@@ -40,6 +40,12 @@
       <%= select fp, :title, Enum.map(@units, &(&1.title)), required: true %>
       <%= error_tag f, :unit %>
     <% end %>
+
+    <%= inputs_for f, :department, fn fp -> %>
+      <%= label f, :department %>
+      <%= select fp, :title, Enum.map(@departments, &(&1.title)), required: true %>
+      <%= error_tag f, :department %>
+    <% end %>
   
     <div>
       <%= submit "Save", phx_disable_with: "Saving..." %>

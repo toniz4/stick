@@ -40,6 +40,11 @@
     <%= @user.unit.title %>
   </li>
 
+  <li>
+    <strong>Department:</strong>
+    <%= @user.department.title %>
+  </li>
+
 </ul>
 
 <span><%= live_patch "Edit", to: Routes.user_show_path(@socket, :edit, @user), class: "button" %></span> |
