@@ -41,8 +41,6 @@ defmodule StickWeb.DepartmentLive.FormComponent do
       department_params
       |> build_department_params()
 
-    socket.assigns.department
-
     department = socket.assigns.department
 
     case Units.update_department(department, params) do
@@ -75,13 +73,11 @@ defmodule StickWeb.DepartmentLive.FormComponent do
   end
 
   defp build_department_params(%{} = department_params) do
-    case department_params do
-      %{"unit" => %{"title" => title}} ->
-        Units.get_unit_by_title(title)
-    end
-    |> (fn unit ->
-          department_params
-          |> Map.put("unit", unit)
-        end).()
+    %{"unit" => %{"title" => title}} = department_params
+
+    unit = Units.get_unit_by_title(title)
+
+    department_params
+    |> Map.put("unit", unit)
   end
 end

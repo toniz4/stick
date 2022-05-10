@@ -1,12 +1,11 @@
-defmodule Stick.Units.Department do
+defmodule Stick.Units.Place do
   use Ecto.Schema
   import Ecto.Changeset
   import Stick.Units.Util
 
   alias Stick.Units.Unit
 
-  schema "departments" do
-    field :extension, :string
+  schema "places" do
     field :title, :string
     belongs_to :unit, Unit, on_replace: :nilify
 
@@ -14,12 +13,12 @@ defmodule Stick.Units.Department do
   end
 
   @doc false
-  def changeset(department, attrs) do
-    department
-    |> cast(attrs, [:title, :extension])
+  def changeset(place, attrs) do
+    place
+    |> cast(attrs, [:title])
     |> get_assoc(:unit, attrs)
     |> assoc_constraint(:unit)
-    |> validate_required([:title, :extension])
+    |> validate_required([:title])
     |> unique_constraint(:title)
   end
 end

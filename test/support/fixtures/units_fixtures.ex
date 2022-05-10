@@ -34,4 +34,18 @@ defmodule Stick.UnitsFixtures do
 
     department
   end
+
+  @doc """
+  Generate a place.
+  """
+  def place_fixture(attrs \\ %{}) do
+    {:ok, place} =
+      attrs
+      |> Enum.into(%{
+        title: "some title"
+      })
+      |> Stick.Units.create_place()
+
+    place
+  end
 end

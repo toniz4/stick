@@ -3,6 +3,7 @@ defmodule Stick.Units.Unit do
   import Ecto.Changeset
 
   alias Stick.Units.Department
+  alias Stick.Units.Place
   alias Stick.Accounts.User
 
   @fiels [:title, :address, :phone]
@@ -12,6 +13,7 @@ defmodule Stick.Units.Unit do
     field :title, :string
     has_many :departments, Department
     has_many :users, User
+    has_many :places, Place
 
     timestamps()
   end
@@ -22,6 +24,7 @@ defmodule Stick.Units.Unit do
     |> cast(attrs, @fiels)
     |> validate_required(@fiels)
     |> validate_title()
+    |> unique_constraint(:title)
   end
 
   defp validate_title(changeset) do

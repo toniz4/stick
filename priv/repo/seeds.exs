@@ -74,9 +74,16 @@ department2 = %{
   unit: Repo.one!(from u in Unit, where: u.title == "Main")
 }
 
+place = %{
+  title: "IT Room",
+  unit: Repo.one!(from u in Unit, where: u.title == "Main")
+}
+
 Units.create_department(department1)
 
 Units.create_department(department2)
+
+Units.create_place(place)
 
 admin = %{
   name: "admin",
